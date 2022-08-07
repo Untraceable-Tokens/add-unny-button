@@ -6,12 +6,12 @@ const chainId = "137";
 
 async function addTokenFunction() {
   try {
-    await ethereum.request({
+    await window.ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: chainId }],
     });
     try {
-      const wasAdded = await ethereum.request({
+      const wasAdded = await window.ethereum.request({
         method: "wallet_watchAsset",
         params: {
           type: "ERC20",
@@ -42,9 +42,19 @@ async function addTokenFunction() {
   }
 }
 
+async function connectFunction() {
+  /* To connect using MetaMask */
+  if (window.ethereum) {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    window.web3 = new Web3(window.ethereum);
+  } else {
+    console.log("No wallet");
+  }
+}
+
 async function addPolygonFunction() {
   try {
-    await ethereum.request({
+    await window.ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: chainId }],
     });
@@ -52,7 +62,7 @@ async function addPolygonFunction() {
     // This error code indicates that the chain has not been added to MetaMask.
     if (switchError.code === 4902) {
       try {
-        await ethereum.request({
+        await window.ethereum.request({
           method: "wallet_addEthereumChain",
           params: [
             {
